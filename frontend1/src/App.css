@@ -310,3 +310,25 @@ header {
   color: #3498db;
   transform: translateX(5px);
 }
+html, body {
+  width: 100vw !important;
+  height: 100vh !important;
+  min-width: 100vw !important;
+  min-height: 100vh !important;
+  margin: 0;
+  padding: 0;
+}
+
+/* Force fullscreen for all major containers */
+.role-selection-page,
+.role-container,
+.login-background,
+.citizen-login,
+.politician-login,
+.admin-login,
+.main-background {
+  width: 100vw !important;
+  height: 100vh !important;
+  min-width: 100vw !important;
+  min-height: 100vh !important;
+}
