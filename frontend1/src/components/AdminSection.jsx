@@ -1,20 +1,33 @@
-import React from 'react';
+import React, { useState } from "react";
 
 export default function AdminSection() {
+  const [users, setUsers] = useState([]);
+
+  const addUser = () => {
+    const name = prompt("Enter new user name:");
+    if (name) setUsers((prev) => [...prev, { id: Date.now(), name }]);
+  };
+
   return (
-    <div className="card">
-      <div className="card-header card-header-custom">
-        <h4 className="mb-0"><i className="fas fa-cogs"></i> Admin Dashboard</h4>
-      </div>
-      <div className="card-body">
-        <p>⚙️ Manage platform, roles, and ensure data integrity.</p>
-        <ul className="list-group mb-3">
-          <li className="list-group-item"><i className="fas fa-users"></i> Manage Users</li>
-          <li className="list-group-item"><i className="fas fa-file-alt"></i> System Logs</li>
-          <li className="list-group-item"><i className="fas fa-database"></i> Backup Data</li>
-          <li className="list-group-item"><i className="fas fa-chart-bar"></i> Analytics & Reports</li>
-        </ul>
-        <button className="btn btn-dark"><i className="fas fa-sliders-h"></i> Open Admin Panel</button>
+    <div className="dashboard-section">
+      <h3>Admin Dashboard</h3>
+      <p>Manage users and oversee all activity.</p>
+
+      <button className="btn-login admin-btn" onClick={addUser}>
+        Add User
+      </button>
+
+      <div className="card">
+        <h4>Registered Users</h4>
+        {users?.length > 0 ? (
+          <ul>
+            {users.map((u) => (
+              <li key={u.id}>{u.name}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>No users added yet.</p>
+        )}
       </div>
     </div>
   );

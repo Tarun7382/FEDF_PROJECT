@@ -1,46 +1,121 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import SignUp from "./SignUp";
+import "./LoginSignup.css";
 
 export default function LoginPage({ role, onLogin, onBack }) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const handleLogin = () => {
-    if (username && password) onLogin(username);
-    else alert('Please enter both username and password');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showSignUp, setShowSignUp] = useState(false);
+
+  const handleSignIn = (e) => {
+    e.preventDefault();
+
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    const existingUser = users.find(
+      (user) =>
+        user.username === username &&
+        user.password === password &&
+        user.role === role
+    );
+
+    if (existingUser) {
+      alert(`✅ Welcome back, ${existingUser.username}!`);
+      onLogin(existingUser.username, existingUser.role); // ⬅ Redirects to dashboard
+    } else {
+      alert("❌ Invalid credentials or incorrect role. Try again or Sign Up.");
+    }
   };
 
-  // ... role styles as in earlier answers ...
+  const handleSignUpComplete = () => {
+    alert("✅ Account created successfully! You can now log in.");
+    setShowSignUp(false); // return to login screen automatically
+  };
 
   return (
-    <div className={`login-background ${role}-login`}>
-      <div className="login-container">
-        <div className={`login-header ${role}-header`}>
-          <h2><i className={`fas fa-${role === 'citizen' ? 'user' : role === 'politician' ? 'landmark' : 'cogs'}`}></i>
-            {role.charAt(0).toUpperCase() + role.slice(1)} Login</h2>
-          <p>Access your {role} dashboard</p>
-        </div>
-        <div className="login-body">
-          <div className="mb-3">
-            <label className="form-label">Username</label>
-            <div className="input-group">
-              <span className="input-group-text"><i className="fas fa-user"></i></span>
-              <input type="text" className="form-control" value={username} onChange={e => setUsername(e.target.value)} placeholder="Enter your username" />
-            </div>
+    <div
+      className={`login-background ${
+        role === "citizen"
+          ? "citizen-login"
+          : role === "politician"
+          ? "politician-login"
+          : "admin-login"
+      }`}
+    >
+      {!showSignUp ? (
+        <div className="login-container">
+          <div
+            className={`login-header ${
+              role === "citizen"
+                ? "citizen-header"
+                : role === "politician"
+                ? "politician-header"
+                : "admin-header"
+            }`}
+          >
+            <h2>{role.charAt(0).toUpperCase() + role.slice(1)} Login</h2>
           </div>
-          <div className="mb-3">
-            <label className="form-label">Password</label>
-            <div className="input-group">
-              <span className="input-group-text"><i className="fas fa-lock"></i></span>
-              <input type="password" className="form-control" value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter your password" />
-            </div>
+
+          <div className="login-body">
+            <form onSubmit={handleSignIn}>
+              <input
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type="submit"
+                className={`btn-login ${
+                  role === "citizen"
+                    ? "citizen-btn"
+                    : role === "politician"
+                    ? "politician-btn"
+                    : "admin-btn"
+                }`}
+              >
+                Sign In
+              </button>
+            </form>
+          </div>
+
+          <div className="login-footer">
+            <p>
+              Don’t have an account?{" "}
+              <span
+                onClick={() => setShowSignUp(true)}
+                style={{
+                  color: "#3498db",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
+              >
+                Sign Up
+              </span>{" "}
+              |{" "}
+              <span
+                onClick={onBack}
+                style={{
+                  color: "#555",
+                  cursor: "pointer",
+                  fontWeight: "500",
+                }}
+              >
+                ⬅ Back
+              </span>
+            </p>
           </div>
         </div>
-        <div className="login-footer">
-          <button type="button" className={`btn btn-login mb-3 ${role}-btn`} onClick={handleLogin}>Login to Platform</button>
-          <div className="back-to-roles" onClick={onBack}>
-            <i className="fas fa-arrow-left"></i> Back to role selection
-          </div>
-        </div>
-      </div>
+      ) : (
+        <SignUp onComplete={handleSignUpComplete} />
+      )}
     </div>
   );
 }

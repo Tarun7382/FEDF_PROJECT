@@ -1,8 +1,6 @@
 {
-  "name": "backend",
+  "name": "citizen-politician-backend",
   "version": "1.0.0",
-  "description": "Simple Express backend for Vite + React frontend",
-  "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
